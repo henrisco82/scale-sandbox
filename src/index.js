@@ -1,14 +1,28 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
+import { AuthProvider } from 'react-oidc-context';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { defineCustomElements } from '@telekom/scale-components/loader';
+import '@telekom/scale-components/dist/scale-components/scale-components.css';
+
+import keycloak from './keycloak';
+
+defineCustomElements();
+
+const onSigninCallback = () => {
+  // Remove query string parameters from URL
+  const url = new URL(window.location.href);
+  url.search = "";
+  window.history.replaceState({}, "", url);
+};
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
+  <AuthProvider {...keycloak} onSigninCallback={onSigninCallback}>
     <App />
-  </React.StrictMode>
+  </AuthProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function
