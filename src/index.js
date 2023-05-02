@@ -4,6 +4,8 @@ import './index.css';
 import { AuthProvider } from 'react-oidc-context';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { ThemeProvider } from '@mui/material/styles';
+import muiTheme from './muiTheme';
 import { defineCustomElements } from '@telekom/scale-components/loader';
 import '@telekom/scale-components/dist/scale-components/scale-components.css';
 
@@ -20,9 +22,11 @@ const onSigninCallback = () => {
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <AuthProvider {...keycloak} onSigninCallback={onSigninCallback}>
-    <App />
-  </AuthProvider>
+  <ThemeProvider theme={muiTheme}>
+    <AuthProvider {...keycloak} onSigninCallback={onSigninCallback}>
+      <App />
+    </AuthProvider>
+  </ThemeProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function

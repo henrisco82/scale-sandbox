@@ -7,10 +7,29 @@ import About from './pages/About/About';
 import Contact from './pages/Contact/Contact';
 import Account from './pages/Account/Account';
 import Settings from './pages/Settings/Settings';
-import Authenticator from './components/SecureRoutes/Authenticator';
+import { useAuth } from 'react-oidc-context';
+import Loader from './components/Loader';
+import PrivateRoute from './components/SecureRoutes/PrivateRoute';
 
 function App() {
-  <Authenticator />
+  const auth = useAuth();
+  switch(auth.activeNavigator){
+    case 'signinSilent':
+
+    return <div>Signing in silently...</div>;
+    case 'signoutRedirect':
+    return <div>Signing out...</div>;
+    default:
+    break;
+  }
+
+  if(auth.isLoading) {
+        return <Loader />;
+  }
+
+  if(auth.error){
+        return <div>Ooops... {auth.error.message}</div>;
+  }
   return (
       <BrowserRouter>
         <AppNavigation>
@@ -19,8 +38,16 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
-            <Route path="/account" element={<Account />} />
-            <Route path="/settings" element={<Settings />} />
+            <Route path="/account" element={
+               <PrivateRoute>
+                 <Account />
+               </PrivateRoute>
+             } />
+             <Route path="/settings" element={
+               <PrivateRoute>
+                 <Settings />
+               </PrivateRoute>
+             } />
           </Routes>
         </div>
         </AppNavigation>

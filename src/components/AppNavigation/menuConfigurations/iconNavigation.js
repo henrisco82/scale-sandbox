@@ -14,7 +14,7 @@ const getIconNavigation = (auth, navigate) => {
     }
 
     const myAccount = {
-        name: 'My Account',
+        name: auth.user?.profile?.email || 'My Account',
         id: 'my-account',
         icon: 'user-file-user',
         onClick: () => navigate('/account'),
@@ -27,7 +27,7 @@ const getIconNavigation = (auth, navigate) => {
         onClick: () => auth.removeUser(),
     }
 
-    return auth.isAuthenticated ? [settings, myAccount, logout] : [login];
+    return auth.isAuthenticated ? [myAccount, settings, logout] : [login];
 };
 
 export default getIconNavigation;
